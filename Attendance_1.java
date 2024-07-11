@@ -20,8 +20,10 @@ class AttendanceManager_1 {
     public boolean authenticate() {
         System.out.println("Enter username:");
         String inputUsername = sc.next();
+        sc.nextLine();
         System.out.println("Enter password:");
         String inputPassword = sc.next();
+        sc.nextLine();
         return inputUsername.equals(username) && inputPassword.equals(password);
     }
 
@@ -89,8 +91,6 @@ class AttendanceManager_1 {
     }
 
     private String formatStudentName(String name) {
-        // Example: "1. Alice Smith" or "1.  Alice Smith"
-        // Remove leading numbers if present and trim spaces
         String formattedName = name.replaceAll("^\\s*\\d+\\.?\\s*", "");
         return (formattedName.isEmpty() ? name : formattedName);
     }
@@ -186,8 +186,6 @@ public class Attendance_1 {
     public static void main(String[] args) {
         boolean condition = true;
         Scanner sc = new Scanner(System.in);
-
-        // Predefined classrooms
         classroomNames.add("Classroom 1");
         classroomNames.add("Classroom 2");
         classroomManagers.add(new Classroom1());
@@ -230,14 +228,23 @@ public class Attendance_1 {
 
                     String[] studentNames = new String[numberOfStudents];
                     for (int i = 0; i < numberOfStudents; i++) {
-                        System.out.println("                                    Enter Name for Student " + (i + 1) + ":");
-                        studentNames[i] = sc.nextLine();
+                        boolean validName = false;
+                        while (!validName) {
+                            System.out.println("                                    Enter Name for Student " + (i + 1) + ":");
+                            String studentName = sc.nextLine();
+                            if (isValidStudentName(studentName)) {
+                                studentNames[i] = studentName;
+                                validName = true;
+                            } else {
+                                System.out.println("Invalid student name. Please enter a valid name without numbers.");
+                            }
+                        }
                     }
 
                     System.out.println("                                    Enter Username for Classroom:");
                     String username = sc.nextLine();
 
-                    System.out.println("                                    Enter Password for Classroom:");
+                    System.out.println("                                    Enter Password for Classroom :");
                     String password = sc.nextLine();
 
                     AttendanceManager_1 newClassroom = new AttendanceManager_1(studentNames, username, password);
@@ -259,7 +266,7 @@ public class Attendance_1 {
                         for (int i = 2; i < classroomManagers.size(); i++) {
                             System.out.println((i - 1) + ". " + classroomNames.get(i));
                         }
-                        int classroomChoice = sc.nextInt();
+                        int classroomChoice = 1 +sc.nextInt();
                         sc.nextLine();
                         if (classroomChoice >= 2 && classroomChoice < classroomManagers.size()) {
                             classroomManagers.get(classroomChoice).displayMenu();
@@ -301,5 +308,8 @@ public class Attendance_1 {
         }
         System.out.println("-------------------------------------------------------------------------------------");
     }
+
+    private static boolean isValidStudentName(String name) {
+        return name.matches("[a-zA-Z\\s]+");
+    }
 }
-    
